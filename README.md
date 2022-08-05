@@ -1,30 +1,10 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
-
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
-
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
-
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+NestJs and GraphQL API that allows getting all ntfs from types ERC721 or ERC1155 from any wallet in Ethereum, Goerli, Polygon and Mumbai netowrks. This API uses `alchemy-sdk` as library and Alchemy as network provider.
+
+- [Nest](https://github.com/nestjs/nest)
+- [GraphQL](https://graphql.org/learn/)
+- [Alchemy](https://www.alchemy.com/)
 
 ## Installation
 
@@ -32,7 +12,18 @@
 $ npm install
 ```
 
+Before run the app set the Alchemy provider API keys at `.env` file
+
+```
+ETH_MAINNET_API_KEY=''
+ETH_GOERLI_API_KEY=''
+POLYGON_API_KEY=''
+MUMBAI_API_KEY=''
+```
+
 ## Running the app
+
+You can start this app:
 
 ```bash
 # development
@@ -45,29 +36,67 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
-## Test
+## Using the app
+
+You can query all ntfs from types `ERC721` or `ERC1155` from any wallet in `Ethereum`, `Goerli`, `Polygon` and `Mumbai` netowrks
+
+For example, to find the `ERC1155` tokenType in `Polygon` network you can call:
 
 ```bash
-# unit tests
-$ npm run test
+{
+  account(
+    data:{
+      id: "0xBEBF19f001e5cC947D2a29bd9772973A94171fB3",
+      network: "Polygon",
+      tokenType: "ERC721"
+    }
+  ) {
+    id
+    network
+    tokens {
+      contract
+      tokenId
+      tokenType
+      balance
+    }
+    numberOfTokens
+  }
+}
 
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
 ```
 
-## Support
+Returns this data:
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```bash
+{
+  "data": {
+    "account": {
+      "id": "0xBEBF19f001e5cC947D2a29bd9772973A94171fB3",
+      "network": "Polygon",
+      "tokens": [
+        {
+          "contract": "0x9a3f1b22154f7ae4b0b248b105c2f3c3e27f477a",
+          "tokenId": "8650",
+          "tokenType": "ERC721",
+          "balance": 1
+        },
+        {
+          "contract": "0xf5f941cccf571a8bddd4420af269427394aed8fe",
+          "tokenId": "580661",
+          "tokenType": "ERC721",
+          "balance": 1
+        }
+      ],
+      "numberOfTokens": 5
+    }
+  }
+}
 
-## Stay in touch
+```
+You can also can do it using curl:
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+```
+curl 'http://localhost:3000/graphql' -H 'Accept-Encoding: gzip, deflate, br' -H 'Content-Type: application/json' -H 'Accept: application/json' -H 'Connection: keep-alive' -H 'DNT: 1' -H 'Origin: http://localhost:3000' --data-binary '{"query":"{\n  account(\n    data:{\n      id: \"0xBEBF19f001e5cC947D2a29bd9772973A94171fB3\",\n      network: \"Polygon\",\n      tokenType: \"ERC721\"\n    }\n  ) {\n    id\n    network\n    tokens {\n      contract\n      tokenId\n      tokenType\n      balance\n    }\n    numberOfTokens\n  }\n}"}' --compressed
 
-## License
+```
 
-Nest is [MIT licensed](LICENSE).

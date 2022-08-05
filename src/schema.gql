@@ -1,0 +1,27 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Account {
+  id: ID!
+  network: String!
+  numberOfTokens: Float!
+  tokens: [Token!]!
+}
+
+input GetAccountInput {
+  id: String!
+  network: String!
+  tokenType: String!
+}
+
+type Query {
+  account(data: GetAccountInput!): Account!
+}
+
+type Token {
+  balance: Float!
+  contract: String!
+  tokenId: String!
+  tokenType: String!
+}
