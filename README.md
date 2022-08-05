@@ -38,7 +38,7 @@ $ npm run start:prod
 
 ## Using the app
 
-You can query all ntfs from types `ERC721` or `ERC1155` from any wallet in `Ethereum`, `Goerli`, `Polygon` and `Mumbai` netowrks
+You can query all ntfs from types `ERC721` or `ERC1155` from any account address in `Ethereum`, `Goerli`, `Polygon` and `Mumbai` netowrks
 
 For example, to find the `ERC1155` tokenType in `Polygon` network you can call:
 
@@ -46,12 +46,12 @@ For example, to find the `ERC1155` tokenType in `Polygon` network you can call:
 {
   account(
     data:{
-      id: "0xBEBF19f001e5cC947D2a29bd9772973A94171fB3",
+      address: "0xBEBF19f001e5cC947D2a29bd9772973A94171fB3",
       network: "Polygon",
       tokenType: "ERC721"
     }
   ) {
-    id
+    address
     network
     tokens {
       contract
@@ -71,7 +71,7 @@ Returns this data:
 {
   "data": {
     "account": {
-      "id": "0xBEBF19f001e5cC947D2a29bd9772973A94171fB3",
+      "address": "0xBEBF19f001e5cC947D2a29bd9772973A94171fB3",
       "network": "Polygon",
       "tokens": [
         {
@@ -96,7 +96,7 @@ Returns this data:
 You can also can do it using curl:
 
 ```
-curl 'http://localhost:3000/graphql' -H 'Accept-Encoding: gzip, deflate, br' -H 'Content-Type: application/json' -H 'Accept: application/json' -H 'Connection: keep-alive' -H 'DNT: 1' -H 'Origin: http://localhost:3000' --data-binary '{"query":"{\n  account(\n    data:{\n      id: \"0xBEBF19f001e5cC947D2a29bd9772973A94171fB3\",\n      network: \"Polygon\",\n      tokenType: \"ERC721\"\n    }\n  ) {\n    id\n    network\n    tokens {\n      contract\n      tokenId\n      tokenType\n      balance\n    }\n    numberOfTokens\n  }\n}"}' --compressed
+curl 'http://localhost:3000/graphql' -H 'Accept-Encoding: gzip, deflate, br' -H 'Content-Type: application/json' -H 'Accept: application/json' -H 'Connection: keep-alive' -H 'DNT: 1' -H 'Origin: http://localhost:3000' --data-binary '{"query":"{\n  account(\n    data:{\n      sddress: \"0xBEBF19f001e5cC947D2a29bd9772973A94171fB3\",\n      network: \"Polygon\",\n      tokenType: \"ERC721\"\n    }\n  ) {\n    address\n    network\n    tokens {\n      contract\n      tokenId\n      tokenType\n      balance\n    }\n    numberOfTokens\n  }\n}"}' --compressed
 
 ```
 
