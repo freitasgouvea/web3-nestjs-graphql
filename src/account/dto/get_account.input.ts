@@ -6,7 +6,7 @@ export class GetAccountInput {
   @Field()
   @IsString()
   @IsNotEmpty({message: 'empty account address'})
-  id: string;
+  address: string;
 
   @Field()
   @IsString()

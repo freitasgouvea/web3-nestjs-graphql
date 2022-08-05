@@ -44,7 +44,7 @@ export class AccountService {
   async getAccount(data: GetAccountInput): Promise<Account> {
     this.setProvider(data.network);
 
-    const nfts = await this.provider.nft.getNftsForOwner(data.id);
+    const nfts = await this.provider.nft.getNftsForOwner(data.address);
     if (!nfts) {
       throw new InternalServerErrorException('Get Account Tokens failed');
     }
@@ -63,7 +63,7 @@ export class AccountService {
     }
 
     return {
-      id: data.id,
+      address: data.address,
       network: data.network,
       tokens: tokens,
       numberOfTokens: nfts.totalCount,

@@ -3,14 +3,14 @@
 # ------------------------------------------------------
 
 type Account {
-  id: ID!
+  address: ID!
   network: String!
   numberOfTokens: Float!
   tokens: [Token!]!
 }
 
 input GetAccountInput {
-  id: String!
+  address: String!
   network: String!
   tokenType: String!
 }
