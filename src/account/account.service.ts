@@ -7,23 +7,31 @@ import { GetAccountInput } from './dto/get_account.input';
 @Injectable()
 export class AccountService {
   constructor(private readonly providerService: ProviderService) {}
-
   private readonly logger = new Logger(Account.name);
   private provider: Alchemy;
 
-  async getAccount(data: GetAccountInput): Promise<Account> {
+  async getAccount(args: GetAccountInput): Promise<Account> {
     try {
-      this.provider = this.providerService.setProvider(data.network);
-      const nfts = await this.provider.nft.getNftsForOwner(data.address);
+      this.provider = this.providerService.setProvider(args.network);
+      
+      const nfts = await this.provider.nft.getNftsForOwner(args.address, {
+        pageKey: args.pageKey || null,
+      });
       if (!nfts) {
-        this.logger.error(`Get ${data.address} tokens failed`);
+        this.logger.error(`Get ${args.address} tokens failed`);
+      }
+
+      let filteredNfts: any;
+      if (args.tokenType) {
+        filteredNfts = nfts.ownedNfts.filter(
+          (element) => element.tokenType == args.tokenType,
+        );
+      } else {
+        filteredNfts = nfts.ownedNfts;
       }
 
       const tokens = [];
-      const filteredTokens = nfts.ownedNfts.filter(
-        (element) => element.tokenType == data.tokenType,
-      );
-      for (const item of filteredTokens) {
+      for (const item of filteredNfts) {
         tokens.push({
           contract: item.contract.address,
           tokenId: item.tokenId,
@@ -32,15 +40,15 @@ export class AccountService {
         });
       }
 
-      this.logger.log(`Get ${data.address} tokens with success`);
       return {
-        address: data.address,
-        network: data.network,
+        address: args.address,
+        network: this.provider.config.network,
         tokens: tokens,
         numberOfTokens: nfts.totalCount,
+        pageKey: nfts.pageKey || null
       };
     } catch (error) {
-      this.logger.error(`Get tokens error: ${error}`);
+      this.logger.error(`Get account tokens error: ${error}`);
     }
   }
 }

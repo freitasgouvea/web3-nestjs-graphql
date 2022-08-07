@@ -13,6 +13,9 @@ export class Account{
 
   @Field()
   numberOfTokens: number;
+
+  @Field({nullable: true})
+  pageKey?: string;
 }
 
 @ObjectType()
