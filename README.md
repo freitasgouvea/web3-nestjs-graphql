@@ -40,15 +40,14 @@ $ npm run start:prod
 
 You can query all ntfs from types `ERC721` or `ERC1155` from any account address in `Ethereum`, `Goerli`, `Polygon` and `Mumbai` netowrks
 
-For example, to find the `ERC721` tokenType in `Polygon` network you can call:
+For example, to find all tokens from an account in `Polygon` network you can call:
 
 ```bash
 {
   account(
-    data:{
+    args:{
       address: "0xBEBF19f001e5cC947D2a29bd9772973A94171fB3",
-      network: "Polygon",
-      tokenType: "ERC721"
+      network: "Polygon"
     }
   ) {
     address
@@ -60,6 +59,7 @@ For example, to find the `ERC721` tokenType in `Polygon` network you can call:
       balance
     }
     numberOfTokens
+    pageKey
   }
 }
 
@@ -72,8 +72,26 @@ Returns this data:
   "data": {
     "account": {
       "address": "0xBEBF19f001e5cC947D2a29bd9772973A94171fB3",
-      "network": "Polygon",
+      "network": "polygon-mainnet",
       "tokens": [
+        {
+          "contract": "0x2135a021969c602b6363328a0bd4784b2055b6c0",
+          "tokenId": "774",
+          "tokenType": "ERC1155",
+          "balance": 1
+        },
+        {
+          "contract": "0x2953399124f0cbb46d2cbacd8a89cf0599974963",
+          "tokenId": "46618549891136803090896323219167151000268539225479513296690729847191848888080",
+          "tokenType": "ERC1155",
+          "balance": 1
+        },
+        {
+          "contract": "0x43c10aaba026d2cfcd95e639ad0700ea52907ea9",
+          "tokenId": "1",
+          "tokenType": "ERC1155",
+          "balance": 1
+        },
         {
           "contract": "0x9a3f1b22154f7ae4b0b248b105c2f3c3e27f477a",
           "tokenId": "8650",
@@ -87,7 +105,8 @@ Returns this data:
           "balance": 1
         }
       ],
-      "numberOfTokens": 5
+      "numberOfTokens": 5,
+      "pageKey": null
     }
   }
 }
@@ -96,16 +115,16 @@ Returns this data:
 You can also can do it using curl:
 
 ```
-curl 'http://localhost:3000/graphql' -H 'Accept-Encoding: gzip, deflate, br' -H 'Content-Type: application/json' -H 'Accept: application/json' -H 'Connection: keep-alive' -H 'DNT: 1' -H 'Origin: http://localhost:3000' --data-binary '{"query":"{\n  account(\n    data:{\n      sddress: \"0xBEBF19f001e5cC947D2a29bd9772973A94171fB3\",\n      network: \"Polygon\",\n      tokenType: \"ERC721\"\n    }\n  ) {\n    address\n    network\n    tokens {\n      contract\n      tokenId\n      tokenType\n      balance\n    }\n    numberOfTokens\n  }\n}"}' --compressed
+curl 'http://localhost:3000/graphql' -H 'Accept-Encoding: gzip, deflate, br' -H 'Content-Type: application/json' -H 'Accept: application/json' -H 'Connection: keep-alive' -H 'DNT: 1' -H 'Origin: http://localhost:3000' --data-binary '{"query":"{\n  account(\n    args:{\n      address: \"0xBEBF19f001e5cC947D2a29bd9772973A94171fB3\",\n      network: \"Polygon\"\n    }\n  ) {\n    address\n    network\n    tokens {\n      contract\n      tokenId\n      tokenType\n      balance\n    }\n    numberOfTokens\n    pageKey\n  }\n}"}' --compressed
 
 ```
 
-And to find the `ERC1155` tokenType in `Polygon` network you can call:
+And to filter the `ERC1155` tokens type in `Polygon` network, for example, you need to pass `ERC1155` tokenType as account arguments:
 
 ```bash
 {
   account(
-    data:{
+    args:{
       address: "0xBEBF19f001e5cC947D2a29bd9772973A94171fB3",
       network: "Polygon",
       tokenType: "ERC1155"
@@ -120,19 +139,20 @@ And to find the `ERC1155` tokenType in `Polygon` network you can call:
       balance
     }
     numberOfTokens
+    pageKey
   }
 }
 
 ```
 
-Returns this data:
+This query returns only the `ERC1155` tokens from an account:
 
 ```bash
 {
   "data": {
     "account": {
       "address": "0xBEBF19f001e5cC947D2a29bd9772973A94171fB3",
-      "network": "Polygon",
+      "network": "polygon-mainnet",
       "tokens": [
         {
           "contract": "0x2135a021969c602b6363328a0bd4784b2055b6c0",
@@ -153,7 +173,8 @@ Returns this data:
           "balance": 1
         }
       ],
-      "numberOfTokens": 5
+      "numberOfTokens": 5,
+      "pageKey": null
     }
   }
 }
@@ -162,8 +183,51 @@ Returns this data:
 You can also can do it using curl:
 
 ```
-curl 'http://localhost:3000/graphql' -H 'Accept-Encoding: gzip, deflate, br' -H 'Content-Type: application/json' -H 'Accept: application/json' -H 'Connection: keep-alive' -H 'DNT: 1' -H 'Origin: http://localhost:3000' --data-binary '{"query":"{\n  account(\n    data:{\n      address: \"0xBEBF19f001e5cC947D2a29bd9772973A94171fB3\",\n      network: \"Polygon\",\n      tokenType: \"ERC1155\"\n    }\n  ) {\n    address\n    network\n    tokens {\n      contract\n      tokenId\n      tokenType\n      balance\n    }\n    numberOfTokens\n  }\n}"}' --compressed
+curl 'http://localhost:3000/graphql' -H 'Accept-Encoding: gzip, deflate, br' -H 'Content-Type: application/json' -H 'Accept: application/json' -H 'Connection: keep-alive' -H 'DNT: 1' -H 'Origin: http://localhost:3000' --data-binary '{"query":"{\n  account(\n    args:{\n      address: \"0xBEBF19f001e5cC947D2a29bd9772973A94171fB3\",\n      network: \"Polygon\",\n      tokenType: \"ERC1155\"\n    }\n  ) {\n    address\n    network\n    tokens {\n      contract\n      tokenId\n      tokenType\n      balance\n    }\n    numberOfTokens\n    pageKey\n  }\n}"}' --compressed
 
 ```
 
+### Pagination
+
+If an account owns more than 100 tokens, the return will be accompanied by the `pageKey` id:
+
+```
+{
+  "data": {
+    "account": {
+      "address": "0xBEBF19f001e5cC947D2a29bd9772973A94171fB3",
+      "network": "eth-mainnet",
+      "tokens": [
+        ...
+      ],
+      "numberOfTokens": 984,
+      "pageKey": "41dff091-d1de-432d-9f2b-bc5b255a441b"
+    }
+  }
+}
+```
+
+And you can query again the next 100 tokens using `pageKey` id in account arguments:
+
+```
+{
+  account(
+    args: {
+      address: "0xBEBF19f001e5cC947D2a29bd9772973A94171fB3"
+      network: "Ethereum"
+      pageKey: "41dff091-d1de-432d-9f2b-bc5b255a441b"
+    }
+  ) {
+    address
+    network
+    tokens {
+      contract
+      tokenId
+      tokenType
+      balance
+    }
+    numberOfTokens
+    pageKey
+  }
+```
 
