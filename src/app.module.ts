@@ -3,6 +3,7 @@ import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { join } from 'path';
 import { AccountModule } from './account/account.module';
+import { ProviderModule } from './provider/provider.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { AccountModule } from './account/account.module';
       sortSchema: true,
     }),
     AccountModule,
+    ProviderModule,
   ],
   controllers: [],
   providers: [],
