@@ -12,33 +12,35 @@ export class AccountService {
   private provider: Alchemy;
 
   async getAccount(data: GetAccountInput): Promise<Account> {
-    this.provider = this.providerService.setProvider(data.network);
+    try {
+      this.provider = this.providerService.setProvider(data.network);
+      const nfts = await this.provider.nft.getNftsForOwner(data.address);
+      if (!nfts) {
+        this.logger.error(`Get ${data.address} tokens failed`);
+      }
 
-    const nfts = await this.provider.nft.getNftsForOwner(data.address);
-    if (!nfts) {
-      this.logger.error(`Get ${data.address} tokens failed`);
+      const tokens = [];
+      const filteredTokens = nfts.ownedNfts.filter(
+        (element) => element.tokenType == data.tokenType,
+      );
+      for (const item of filteredTokens) {
+        tokens.push({
+          contract: item.contract.address,
+          tokenId: item.tokenId,
+          tokenType: item.tokenType,
+          balance: item.balance,
+        });
+      }
+
+      this.logger.log(`Get ${data.address} tokens with success`);
+      return {
+        address: data.address,
+        network: data.network,
+        tokens: tokens,
+        numberOfTokens: nfts.totalCount,
+      };
+    } catch (error) {
+      this.logger.error(`Get tokens error: ${error}`);
     }
-
-    const tokens = [];
-    const filteredTokens = nfts.ownedNfts.filter(
-      (element) => element.tokenType == data.tokenType,
-    );
-    for (const item of filteredTokens) {
-      tokens.push({
-        contract: item.contract.address,
-        tokenId: item.tokenId,
-        tokenType: item.tokenType,
-        balance: item.balance,
-      });
-    }
-
-    this.logger.log(`Get ${data.address} tokens with success`);
-
-    return {
-      address: data.address,
-      network: data.network,
-      tokens: tokens,
-      numberOfTokens: nfts.totalCount,
-    };
   }
 }
