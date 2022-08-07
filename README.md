@@ -119,7 +119,9 @@ curl 'http://localhost:3000/graphql' -H 'Accept-Encoding: gzip, deflate, br' -H 
 
 ```
 
-And to filter the `ERC1155` tokens type in `Polygon` network, for example, you need to pass `ERC1155` tokenType as account arguments:
+### Filter by token type
+
+To filter the `ERC1155` tokens type in `Polygon` network from an account, for example, you need to pass `ERC1155` tokenType as account arguments:
 
 ```bash
 {
